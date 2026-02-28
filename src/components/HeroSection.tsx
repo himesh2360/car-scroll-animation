@@ -12,6 +12,7 @@ export default function HeroSection() {
     const headlineRef = useRef<HTMLHeadingElement>(null);
     const carRef = useRef<HTMLDivElement>(null);
     const roadRef = useRef<HTMLDivElement>(null);
+    const maskRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -31,31 +32,41 @@ export default function HeroSection() {
                 "-=1.2"
             );
 
-            // Advanced Scroll Logic with 3D Scale
+            // Advanced Scroll Logic with Wipe Reveal
             const car = carRef.current;
+            const mask = maskRef.current;
 
             gsap.to(car, {
-                x: "125vw",
-                scale: 2.2, // Make car significantly bigger on scroll
+                x: "135vw",
                 scrollTrigger: {
                     trigger: containerRef.current,
                     start: "top top",
-                    end: "+=250%", // Extended for smoother zoom
-                    scrub: 2.5,
+                    end: "+=350%", // Longer for more control
+                    scrub: 3,     // Higher inertia for smooth feel
                     pin: true,
                     onUpdate: (self) => {
                         const velocity = self.getVelocity();
-                        // Dynamic Rotation (Steering) - more responsive
-                        const rotationSpeed = gsap.utils.clamp(-20, 20, velocity / 100);
-                        // Suspension Bounce + Depth Shift
-                        const bounce = Math.sin(self.progress * 50) * 5;
+                        // Dynamic Rotation (Steering)
+                        const rotationSpeed = gsap.utils.clamp(-8, 8, velocity / 150);
+                        // Suspension Bounce
+                        const bounce = Math.sin(self.progress * 60) * 4;
 
                         gsap.to(car, {
                             rotation: rotationSpeed,
                             y: bounce,
                             overwrite: "auto",
-                            duration: 0.4,
+                            duration: 0.5,
                         });
+
+                        // Wipe Reveal: Update clip-path based on car position
+                        if (mask) {
+                            const revealPercent = self.progress * 135;
+                            gsap.to(mask, {
+                                clipPath: `inset(0 ${Math.max(0, 100 - revealPercent)}% 0 0)`,
+                                overwrite: "auto",
+                                duration: 0.1
+                            });
+                        }
                     },
                 },
             });
@@ -81,23 +92,25 @@ export default function HeroSection() {
     }, []);
 
     return (
-        <section ref={containerRef} className="relative h-screen flex flex-col items-center justify-center bg-transparent overflow-hidden px-4 md:px-0">
+        <section ref={containerRef} className="relative h-screen flex flex-col items-center justify-center bg-black overflow-hidden px-4 md:px-0">
             {/* Professional Background Road Path */}
             <div className="absolute inset-0 z-0 pointer-events-none flex items-center">
                 <div
                     ref={roadRef}
-                    className="w-[150%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent -rotate-3 origin-left blur-[1px] shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+                    className="w-[150%] h-[1px] bg-gradient-to-r from-transparent via-zinc-800 to-transparent -rotate-1 origin-left blur-[1px]"
                 ></div>
             </div>
 
-            <div className="relative z-0 w-full max-w-7xl mx-auto text-center mt-[-10vh]">
-                <h1
-                    ref={headlineRef}
-                    className="text-7xl md:text-[11rem] font-black tracking-tighter text-white uppercase leading-[0.8] mb-20 text-glow opacity-80"
-                >
-                    WELCOME TO<br />
-                    <span className="text-zinc-600">ITZFIZZ</span>
-                </h1>
+            <div className="relative z-10 w-full max-w-7xl mx-auto text-center mt-[-10vh]">
+                <div ref={maskRef} style={{ clipPath: 'inset(0 100% 0 0)', position: 'relative' }}>
+                    <h1
+                        ref={headlineRef}
+                        className="text-7xl md:text-[11.5rem] font-black tracking-tighter text-white uppercase leading-[0.85] mb-20 text-glow"
+                    >
+                        WELCOME TO<br />
+                        <span className="text-zinc-600">ITZFIZZ</span>
+                    </h1>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-10">
                     <StatCard icon={<Zap className="w-5 h-5 text-yellow-500" />} value="98%" label="SPEED INCREASE" />
@@ -109,12 +122,12 @@ export default function HeroSection() {
             {/* Premium Car Asset - Positioned in front of text */}
             <div
                 ref={carRef}
-                className="absolute bottom-1/4 -left-[500px] w-[35rem] h-auto z-50 pointer-events-none drop-shadow-[0_50px_100px_rgba(0,0,0,1)]"
+                className="absolute bottom-1/4 -left-[500px] w-[35rem] h-auto z-50 pointer-events-none"
             >
                 <img
                     src="/car.png"
                     alt="Sports Car"
-                    className="w-full h-auto mix-blend-screen brightness-125 contrast-125 drop-shadow-[0_0_80px_rgba(255,255,255,0.05)]"
+                    className="w-full h-auto mix-blend-screen"
                 />
             </div>
 
