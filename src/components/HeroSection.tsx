@@ -125,7 +125,7 @@ export default function HeroSection() {
                 className="absolute bottom-1/4 -left-[500px] w-[35rem] h-auto z-50 pointer-events-none"
             >
                 <img
-                    src="/car.png"
+                    src={`${process.env.NODE_ENV === 'production' ? '/car-scroll-animation' : ''}/car.png`}
                     alt="Sports Car"
                     className="w-full h-auto mix-blend-screen"
                 />
