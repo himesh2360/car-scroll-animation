@@ -31,29 +31,30 @@ export default function HeroSection() {
                 "-=1.2"
             );
 
-            // Advanced Scroll Logic
+            // Advanced Scroll Logic with 3D Scale
             const car = carRef.current;
 
             gsap.to(car, {
-                x: "115vw",
+                x: "125vw",
+                scale: 2.2, // Make car significantly bigger on scroll
                 scrollTrigger: {
                     trigger: containerRef.current,
                     start: "top top",
-                    end: "+=200%", // Longer scroll for depth
-                    scrub: 2,
+                    end: "+=250%", // Extended for smoother zoom
+                    scrub: 2.5,
                     pin: true,
                     onUpdate: (self) => {
                         const velocity = self.getVelocity();
-                        // Dynamic Rotation (Steering)
-                        const rotationSpeed = gsap.utils.clamp(-15, 15, velocity / 120);
-                        // Suspension Bounce (Y-axis oscillation based on movement)
-                        const bounce = Math.sin(self.progress * 40) * 3;
+                        // Dynamic Rotation (Steering) - more responsive
+                        const rotationSpeed = gsap.utils.clamp(-20, 20, velocity / 100);
+                        // Suspension Bounce + Depth Shift
+                        const bounce = Math.sin(self.progress * 50) * 5;
 
                         gsap.to(car, {
                             rotation: rotationSpeed,
                             y: bounce,
                             overwrite: "auto",
-                            duration: 0.6,
+                            duration: 0.4,
                         });
                     },
                 },
@@ -89,13 +90,13 @@ export default function HeroSection() {
                 ></div>
             </div>
 
-            <div className="relative z-10 w-full max-w-7xl mx-auto text-center mt-[-10vh]">
+            <div className="relative z-0 w-full max-w-7xl mx-auto text-center mt-[-10vh]">
                 <h1
                     ref={headlineRef}
-                    className="text-7xl md:text-[10rem] font-black tracking-tighter text-white uppercase leading-none mb-20 text-glow"
+                    className="text-7xl md:text-[11rem] font-black tracking-tighter text-white uppercase leading-[0.8] mb-20 text-glow opacity-80"
                 >
-                    W E L C O M E<br />
-                    <span className="text-zinc-500">I T Z F I Z Z</span>
+                    WELCOME TO<br />
+                    <span className="text-zinc-600">ITZFIZZ</span>
                 </h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-10">
@@ -105,15 +106,15 @@ export default function HeroSection() {
                 </div>
             </div>
 
-            {/* Premium Car Asset */}
+            {/* Premium Car Asset - Positioned in front of text */}
             <div
                 ref={carRef}
-                className="absolute bottom-1/4 -left-[400px] w-[30rem] h-auto z-20 pointer-events-none"
+                className="absolute bottom-1/4 -left-[500px] w-[35rem] h-auto z-50 pointer-events-none drop-shadow-[0_50px_100px_rgba(0,0,0,1)]"
             >
                 <img
                     src="/car.png"
                     alt="Sports Car"
-                    className="w-full h-auto drop-shadow-[0_40px_100px_rgba(0,0,0,0.9)] mix-blend-screen"
+                    className="w-full h-auto mix-blend-screen brightness-125 contrast-125 drop-shadow-[0_0_80px_rgba(255,255,255,0.05)]"
                 />
             </div>
 
