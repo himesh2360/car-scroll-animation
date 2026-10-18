@@ -13,6 +13,7 @@ export default function HeroSection() {
     const carRef = useRef<HTMLDivElement>(null);
     const roadRef = useRef<HTMLDivElement>(null);
     const maskRef = useRef<HTMLDivElement>(null);
+     const maskRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
